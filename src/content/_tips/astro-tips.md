@@ -24,19 +24,19 @@ The `_` prefix also works on files — `_` prefixed files are excluded from rout
 
 ```md
 ---
-title: "Post Title"                         # required
-pubDatetime: 2026-10-25T10:00:00Z           # required, ISO format
-modDatetime: 2026-10-26T10:00:00Z           # optional; if set, used for sort order
-author: "Pikender Sharma"                   # optional, defaults to site.author
-description: "Short description for SEO"   # required
-tags: ["elixir", "ai"]                      # optional, defaults to ["others"]
-featured: true                              # optional; shows in Featured section
-draft: false                                # optional; true = hidden from site
-slug: "custom-url-slug"                     # optional; defaults to filename
-ogImage: "../../assets/images/my-og.png"   # optional; auto-generated if omitted
-canonicalURL: "https://original-source"    # optional; for cross-posted content
-hideEditPost: true                          # optional; hide edit link for this post
-timezone: "Asia/Kolkata"                    # optional; override site timezone
+title: "Post Title" # required
+pubDatetime: 2026-10-25T10:00:00Z # required, ISO format
+modDatetime: 2026-10-26T10:00:00Z # optional; if set, used for sort order
+author: "Pikender Sharma" # optional, defaults to site.author
+description: "Short description for SEO" # required
+tags: ["elixir", "ai"] # optional, defaults to ["others"]
+featured: true # optional; shows in Featured section
+draft: false # optional; true = hidden from site
+slug: "custom-url-slug" # optional; defaults to filename
+ogImage: "../../assets/images/my-og.png" # optional; auto-generated if omitted
+canonicalURL: "https://original-source" # optional; for cross-posted content
+hideEditPost: true # optional; hide edit link for this post
+timezone: "Asia/Kolkata" # optional; override site timezone
 ---
 ```
 
@@ -101,6 +101,7 @@ Supported via `rehype-callouts` (Obsidian theme). Use blockquote syntax:
 Full list of types: `NOTE`, `ABSTRACT`, `INFO`, `TODO`, `TIP`, `SUCCESS`, `QUESTION`, `WARNING`, `FAILURE`, `DANGER`, `BUG`, `EXAMPLE`, `QUOTE`. Many have aliases (`HINT`/`IMPORTANT` → `TIP`, `CAUTION` → `WARNING`).
 
 **Collapsible callouts:**
+
 ```md
 > [!WARNING]- Collapsed by default
 > Hidden until the reader expands it.
@@ -110,6 +111,7 @@ Full list of types: `NOTE`, `ABSTRACT`, `INFO`, `TODO`, `TIP`, `SUCCESS`, `QUEST
 ```
 
 **Custom titles:**
+
 ```md
 > [!NOTE] Did you know?
 > The text after the type becomes the heading.
@@ -124,6 +126,7 @@ Full list of types: `NOTE`, `ABSTRACT`, `INFO`, `TODO`, `TIP`, `SUCCESS`, `QUEST
 ```md
 ![alt text](@/assets/images/example.jpg)
 <!-- or relative path -->
+
 ![alt text](../../assets/images/example.jpg)
 ```
 
@@ -145,16 +148,17 @@ Note: `<img>` tags do not work in plain markdown for `src/assets/` images — us
 
 **Draft values and what they mean:**
 
-| `draft` value | Behaviour |
-|---|---|
-| `true` | Hidden from production build; visible in dev mode (`pnpm dev`) |
-| `false` | Published — visible everywhere |
-| `first` | Special value for the git hook: on next commit, hook sets `draft: false` and clears `modDatetime` |
-| omitted | Treated as `false` (published) |
+| `draft` value | Behaviour                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------- |
+| `true`        | Hidden from production build; visible in dev mode (`pnpm dev`)                                    |
+| `false`       | Published — visible everywhere                                                                    |
+| `first`       | Special value for the git hook: on next commit, hook sets `draft: false` and clears `modDatetime` |
+| omitted       | Treated as `false` (published)                                                                    |
 
 **Full lifecycle:**
 
 1. **Start writing** — create the file with `draft: true`. Stub out `pubDatetime` (any value, the hook will set it on first commit).
+
    ```md
    ---
    title: "My Post"
@@ -169,6 +173,7 @@ Note: `<img>` tags do not work in plain markdown for `src/assets/` images — us
 2. **Preview locally** — run `pnpm dev`. Draft posts are visible at their URL in dev mode but excluded from post listings and the production build.
 
 3. **Ready to publish** — change `draft: true` to `draft: first`.
+
    ```md
    draft: first
    ```
@@ -180,6 +185,7 @@ Note: `<img>` tags do not work in plain markdown for `src/assets/` images — us
 **Without the git hook**, just set `draft: false` manually and set `pubDatetime` to the current datetime yourself.
 
 **Key points:**
+
 - Drafts are fully invisible in production — excluded from post listings, tag pages, RSS, and OG image generation
 - You can have unlimited drafts in `src/content/posts/` without affecting the live site
 - `modDatetime` requires the field to be present in frontmatter (even if blank) for the git hook's `sed` command to work
@@ -201,6 +207,7 @@ Note: `<img>` tags do not work in plain markdown for `src/assets/` images — us
 Enabled by default via `features.dynamicOgImage: true` in `astro-paper.config.ts`.
 
 Auto-generates a PNG per post at build time using the post `title`, `site.author`, and `site.title`. Only runs for posts that:
+
 - don't have `ogImage` set in frontmatter
 - are not `draft: true`
 
@@ -213,11 +220,13 @@ Auto-generates a PNG per post at build time using the post `title`, `site.author
 ## Adding LaTeX Equations
 
 Install plugins:
+
 ```bash
 pnpm install rehype-katex remark-math katex
 ```
 
 Update `astro.config.ts`:
+
 ```ts
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -229,11 +238,16 @@ markdown: {
 ```
 
 Import KaTeX CSS in `src/layouts/Layout.astro`:
+
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+/>
 ```
 
 Add color fix in `src/styles/typography.css`:
+
 ```css
 .prose .katex-display {
   @apply text-foreground;
@@ -241,6 +255,7 @@ Add color fix in `src/styles/typography.css`:
 ```
 
 Usage in posts:
+
 - Inline: `$E = mc^2$`
 - Block: `$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$`
 
@@ -276,6 +291,7 @@ The hook writes a blank value (`modDatetime:`) when first-publishing a post, so 
 Use a `pre-commit` hook to auto-set `pubDatetime` on new posts and `modDatetime` on edits.
 
 **Auto-set `modDatetime` on edits** (only when `draft: false`):
+
 ```shell
 git diff --cached --name-status |
 grep -i '^M.*\.md$' |
@@ -298,6 +314,7 @@ done
 ```
 
 **Auto-set `pubDatetime` on new files:**
+
 ```shell
 git diff --cached --name-status | egrep -i "^(A).*\.(md)$" | while read a b; do
   cat $b | sed "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
@@ -315,11 +332,13 @@ Install [Husky](https://typicode.github.io/husky/) to make hooks portable across
 Serverless comments stored in GitHub Discussions — perfect for a static blog.
 
 **Prerequisites:**
+
 - Repo must be public
 - [Giscus app](https://github.com/apps/giscus) installed on the repo
 - GitHub Discussions enabled
 
 **Simple embed** — add to `src/layouts/PostLayout.astro` after `<ShareLinks />`:
+
 ```html
 <script
   src="https://giscus.app/client.js"
@@ -357,6 +376,7 @@ posts: {
 ## Updating Dependencies
 
 Use `npm-check-updates`:
+
 ```bash
 npm install -g npm-check-updates
 ncu                        # preview all updates
@@ -386,19 +406,23 @@ Three options in `src/components/Header.astro`:
 **Option 1 — Text** (default): update `site.title` in `astro-paper.config.ts`.
 
 **Option 2 — SVG logo:**
+
 ```astro
 ---
 import DummyLogo from "@/assets/dummy-logo.svg";
 ---
+
 <a href="/"><DummyLogo class="scale-75 dark:invert" /></a>
 ```
 
 **Option 3 — Image logo:**
+
 ```astro
 ---
 import { Image } from "astro:assets";
 import dummyLogo from "@/assets/dummy-logo.png";
 ---
+
 <a href="/"><Image src={dummyLogo} alt="My Blog" class="dark:invert" /></a>
 ```
 
@@ -411,20 +435,24 @@ Replace the `{config.site.title}` expression in `Header.astro` with your chosen 
 Three files to update:
 
 1. `astro.config.ts` — add/change the font entry:
+
 ```ts
-fonts: [{
-  name: "Your Font Name",
-  cssVariable: "--font-your-font",
-  provider: fontProviders.google(),
-  fallbacks: ["monospace"],
-  weights: [300, 400, 500, 600, 700],
-  styles: ["normal", "italic"],
-}]
+fonts: [
+  {
+    name: "Your Font Name",
+    cssVariable: "--font-your-font",
+    provider: fontProviders.google(),
+    fallbacks: ["monospace"],
+    weights: [300, 400, 500, 600, 700],
+    styles: ["normal", "italic"],
+  },
+];
 ```
 
 2. `src/layouts/Layout.astro` — update the `<Font>` component's `cssVariable`.
 
 3. `src/styles/theme.css` — point `--font-app` at your new variable:
+
 ```css
 @theme inline {
   --font-app: var(--font-your-font);
@@ -438,6 +466,7 @@ Font name must match exactly as shown on Google Fonts.
 ## Adding a New Social Icon
 
 The `name` in `socials` must match an SVG filename in `src/assets/icons/socials/`. To add a platform not in the defaults:
+
 1. Add `your-platform.svg` to `src/assets/icons/socials/`
 2. Add `{ name: "your-platform", url: "https://..." }` to the `socials` array
 
@@ -449,20 +478,21 @@ Same applies to `shareLinks`.
 
 Colors live in `src/styles/theme.css` as CSS custom properties. Seven tokens:
 
-| Token | Purpose |
-|---|---|
-| `--background` | Primary background |
-| `--foreground` | Primary text color |
-| `--accent` | Links, buttons, highlights |
-| `--accent-foreground` | Text on accent backgrounds |
-| `--muted` | Cards, tags, hover backgrounds |
-| `--muted-foreground` | Text on muted backgrounds |
-| `--border` | Borders and dividers |
+| Token                 | Purpose                        |
+| --------------------- | ------------------------------ |
+| `--background`        | Primary background             |
+| `--foreground`        | Primary text color             |
+| `--accent`            | Links, buttons, highlights     |
+| `--accent-foreground` | Text on accent backgrounds     |
+| `--muted`             | Cards, tags, hover backgrounds |
+| `--muted-foreground`  | Text on muted backgrounds      |
+| `--border`            | Borders and dividers           |
 
 Edit both blocks in `src/styles/theme.css`:
 
 ```css
-:root, [data-theme="light"] {
+:root,
+[data-theme="light"] {
   --background: #fdfdfd;
   --foreground: #282728;
   --accent: #006cac;
@@ -490,58 +520,103 @@ To disable dark mode entirely: set `features.lightAndDarkMode: false` in `astro-
 Drop-in replacements — copy into `src/styles/theme.css`.
 
 **Kha-Yan** (purple/warm light):
+
 ```css
-:root, [data-theme="light"] {
-  --background: #fefaec; --foreground: #120e01; --accent: #6e10cf;
-  --accent-foreground: #fefaec; --muted: #dcdcdc; --muted-foreground: #6b7280; --border: #cdc4d6;
+:root,
+[data-theme="light"] {
+  --background: #fefaec;
+  --foreground: #120e01;
+  --accent: #6e10cf;
+  --accent-foreground: #fefaec;
+  --muted: #dcdcdc;
+  --muted-foreground: #6b7280;
+  --border: #cdc4d6;
 }
 ```
 
 **Nila** (cool blue-purple light):
+
 ```css
-:root, [data-theme="light"] {
-  --background: #f6f6fb; --foreground: #0c0c19; --accent: #6760b4;
-  --accent-foreground: #f3f3f3; --muted: #dddcea; --muted-foreground: #54515b; --border: #d8d6ec;
+:root,
+[data-theme="light"] {
+  --background: #f6f6fb;
+  --foreground: #0c0c19;
+  --accent: #6760b4;
+  --accent-foreground: #f3f3f3;
+  --muted: #dddcea;
+  --muted-foreground: #54515b;
+  --border: #d8d6ec;
 }
 ```
 
 **Jadeite** (teal light):
+
 ```css
-:root, [data-theme="light"] {
-  --background: #f6fcf7; --foreground: #060b07; --accent: #027c6d;
-  --accent-foreground: #ffffff; --muted: #c9e4e2; --muted-foreground: #6b7280; --border: #d4e1df;
+:root,
+[data-theme="light"] {
+  --background: #f6fcf7;
+  --foreground: #060b07;
+  --accent: #027c6d;
+  --accent-foreground: #ffffff;
+  --muted: #c9e4e2;
+  --muted-foreground: #6b7280;
+  --border: #d4e1df;
 }
 ```
 
 **Paper Dark** (cyan accents dark):
+
 ```css
 [data-theme="dark"] {
-  --background: #2f3741; --foreground: #e6e6e6; --accent: #1ad9d9;
-  --accent-foreground: #0d2b2b; --muted: #596b81; --muted-foreground: #8faabb; --border: #3b4655;
+  --background: #2f3741;
+  --foreground: #e6e6e6;
+  --accent: #1ad9d9;
+  --accent-foreground: #0d2b2b;
+  --muted: #596b81;
+  --muted-foreground: #8faabb;
+  --border: #3b4655;
 }
 ```
 
 **Deep Purple** (magenta dark):
+
 ```css
 [data-theme="dark"] {
-  --background: #212737; --foreground: #eaedf3; --accent: #eb3fd3;
-  --accent-foreground: #1a0d1a; --muted: #513f51; --muted-foreground: #c09abc; --border: #642451;
+  --background: #212737;
+  --foreground: #eaedf3;
+  --accent: #eb3fd3;
+  --accent-foreground: #1a0d1a;
+  --muted: #513f51;
+  --muted-foreground: #c09abc;
+  --border: #642451;
 }
 ```
 
 **Ember** (red/warm dark):
+
 ```css
 [data-theme="dark"] {
-  --background: #1a1a1a; --foreground: #f5efe4; --accent: #ff3737;
-  --accent-foreground: #1a1a1a; --muted: #38342f; --muted-foreground: #a59a8c; --border: #6f5648;
+  --background: #1a1a1a;
+  --foreground: #f5efe4;
+  --accent: #ff3737;
+  --accent-foreground: #1a1a1a;
+  --muted: #38342f;
+  --muted-foreground: #a59a8c;
+  --border: #6f5648;
 }
 ```
 
 **Espresso** (brown/warm dark):
+
 ```css
 [data-theme="dark"] {
-  --background: #2f2f2f; --foreground: #ebe5e1; --accent: #ee781e;
-  --accent-foreground: #1a1a1a; --muted: #4f4b44; --muted-foreground: #ddbfa7; --border: #6f5648;
+  --background: #2f2f2f;
+  --foreground: #ebe5e1;
+  --accent: #ee781e;
+  --accent-foreground: #1a1a1a;
+  --muted: #4f4b44;
+  --muted-foreground: #ddbfa7;
+  --border: #6f5648;
 }
 ```
 
@@ -550,6 +625,7 @@ Drop-in replacements — copy into `src/styles/theme.css`.
 ## Google Site Verification
 
 Preferred: set in config (gets committed with the repo):
+
 ```ts
 site: {
   googleVerification: "your-token-here",
@@ -557,6 +633,7 @@ site: {
 ```
 
 Alternative: use `.env` (not committed):
+
 ```bash
 PUBLIC_GOOGLE_SITE_VERIFICATION=your-token-here
 ```

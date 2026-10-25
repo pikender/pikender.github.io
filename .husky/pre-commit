@@ -1,3 +1,6 @@
+# Lint and format check
+npm run lint && npm run format:check || exit 1
+
 # New files — set pubDatetime to commit time
 git diff --cached --name-status | egrep -i "^(A).*\.(md|mdx)$" | while read a b; do
   cat $b | sed "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
