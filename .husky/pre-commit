@@ -1,0 +1,25 @@
+# New files — set pubDatetime to commit time
+git diff --cached --name-status | egrep -i "^(A).*\.(md|mdx)$" | while read a b; do
+  cat $b | sed "/---.*/,/---.*/s/^pubDatetime:.*$/pubDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
+  mv tmp $b
+  git add $b
+done
+
+# Modified files — update modDatetime (only when draft: false or draft: first)
+git diff --cached --name-status |
+grep -i '^M.*\.md$' |
+while read _ file; do
+  filecontent=$(cat "$file")
+  frontmatter=$(echo "$filecontent" | awk -v RS='---' 'NR==2{print}')
+  draft=$(echo "$frontmatter" | awk '/^draft: /{print $2}')
+  if [ "$draft" = "false" ]; then
+    cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime: $(date -u "+%Y-%m-%dT%H:%M:%SZ")/" > tmp
+    mv tmp $file
+    git add $file
+  fi
+  if [ "$draft" = "first" ]; then
+    cat $file | sed "/---.*/,/---.*/s/^modDatetime:.*$/modDatetime:/" | sed "/---.*/,/---.*/s/^draft:.*$/draft: false/" > tmp
+    mv tmp $file
+    git add $file
+  fi
+done
