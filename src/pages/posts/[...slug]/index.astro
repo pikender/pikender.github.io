@@ -71,6 +71,7 @@ const {
   timezone,
   tags,
   hideEditPost,
+  draft,
 } = post.data;
 
 const { Content } = await render(post);
@@ -113,6 +114,13 @@ const ogImage = ogImageUrl
     class:list={["app-layout", { "mt-8": !config.features.showBackButton }]}
     data-pagefind-body
   >
+    {
+      draft && import.meta.env.DEV && (
+        <div class="mb-4 rounded border border-yellow-400 bg-yellow-50 px-4 py-2 text-sm font-medium text-yellow-800 dark:border-yellow-600 dark:bg-yellow-950 dark:text-yellow-200">
+          Draft — not published
+        </div>
+      )
+    }
     <h1
       style={{ viewTransitionName: toTransitionName(post.id) }}
       class="text-accent inline-block text-2xl font-bold sm:text-3xl"
